@@ -12,11 +12,17 @@ export default async (req, res) => {
     privateKey: key.key, 
   });
 
-  const subscriptions = await store.subscriptions(id);
-  const history = await store.history(id);
+  try {
+    const subscriptions = await store.subscriptions(id);
+    const history = await store.history(id);
 
-  res.status(200).json({
-    subscriptions: subscriptions, 
-    history, history 
-  });
+    res.status(200).json({
+      subscriptions: subscriptions,
+      history, history
+    });
+  } catch (e) {
+    return res.status(500).json({
+      error: e
+    })
+  }
 }
