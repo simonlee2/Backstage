@@ -7,7 +7,7 @@
   HStack,
   Text,
 } from "@chakra-ui/react";
-import NextLink from 'next/Link';
+import NextLink from 'next/link';
 import { FaBeer, FaIdBadge } from 'react-icons/fa';
 
 function handleClickFAQ() {
