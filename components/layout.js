@@ -9,6 +9,7 @@ export default function NextLayout({ children }) {
     <div>
       <Head>
         <link rel="icon" href="/favicon.ico"/>
+        <title>{ siteTitle }</title>
         <meta
           name="description"
           content="Support your paying customers with confidence and ease"
