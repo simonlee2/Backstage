@@ -1539,6 +1539,11 @@ crypto-browserify@3.12.0, crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
+
 css-box-model@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/css-box-model/-/css-box-model-1.2.1.tgz#59951d3b81fd6b2074a62d49444415b0d2b4d7c1"
@@ -3834,11 +3839,12 @@ static-eval@2.0.2:
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
 storekit-sdk@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/storekit-sdk/-/storekit-sdk-1.0.3.tgz#c559321cf1ef114dcc3cc04e33a7ec6ee15b6a0f"
-  integrity sha512-73fDXIJfYX93QvHUMLkA3EQQz15ThOtGigLHHZYCMpNqcyLD82zw8hbPe074maexOxITAu+ln2p14k5te/0arg==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/storekit-sdk/-/storekit-sdk-1.0.4.tgz#de73d076e9144e7dddcff536ab31ebdc297c8d01"
+  integrity sha512-aDHM7Mf3uNp+qVfFcqjXhOKtHHKdeI/Ksm7qqRjaUHhnH+W4+qClHf6snTbucHLov8eArd3ygxFGHl0jalaIDA==
   dependencies:
     axios "^0.21.1"
+    crypto "^1.0.1"
     jsonpath "^1.1.1"
     jsonwebtoken "^8.5.1"
 
