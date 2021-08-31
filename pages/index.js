@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import TransactionDetail from '../components/transactionDetail';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const [transactionID, setTransactionID] = useState('');
   const [transactionDetail, setTransactionDetail] = useState({subscriptions: null, history: null});
 
@@ -20,16 +21,23 @@ export default function Home() {
     event.preventDefault();
     const tid = event.target.tid.value;
     setTransactionID(tid);
+    setIsLoading(true);
 
-    const res = await fetch(`/api/transactions/${tid}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'GET'
-    })
-
-    const result = await res.json()
-    setTransactionDetail(result );
+    try {
+      const res = await fetch(`/api/transactions/${tid}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+  
+      const result = await res.json()
+      setTransactionDetail(result);
+    } catch (e) {
+      alert(`Error fetching records: ${e}`);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -47,7 +55,7 @@ export default function Home() {
         <form onSubmit={handleSubmit}>
           <HStack py="12">
             <Input id="tid" name="tid" type="text" placeholder="Transaction ID" required />
-            <Button type="submit" colorScheme="green">Go!</Button>
+            <Button isLoading={ isLoading } type="submit" colorScheme="green">Go!</Button>
           </HStack>
         </form>
       </Container>
