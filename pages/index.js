@@ -60,17 +60,20 @@ export default function Home() {
         <Text fontSize={ ["2xl","4xl"] } fontWeight="semibold" py="8">
           In-app Purchase Records
         </Text>
-        <Text fontSize={ ["md","lg"] }>
-          Get started with a <Code className={styles.code}>Transaction ID</Code> 👇🏻
-        </Text>
+        <Box py="12">
+          <Text fontSize={ ["md","lg"] }>
+            Get started with a <Code className={styles.code}>Transaction ID</Code> 👇🏻
+          </Text>
 
-        {/* Input */}
-        <form onSubmit={handleSubmit}>
-          <HStack py="12">
-            <Input id="tid" name="tid" type="text" placeholder="Transaction ID" required />
-            <Button isLoading={ isLoading } type="submit" colorScheme="green">Go!</Button>
-          </HStack>
-        </form>
+          {/* Input */}
+          <form onSubmit={handleSubmit}>
+            <HStack py="4">
+              <Input id="tid" name="tid" type="text" placeholder="Transaction ID" required />
+              <Button isLoading={ isLoading } type="submit" colorScheme="green">Go!</Button>
+            </HStack>
+          </form>
+        </Box>
+        <Box h="10" />
         <Subscriptions data={ transactionDetail.subscriptions }></Subscriptions>  
         <History data={ transactionDetail.history }></History>
       </Container>
