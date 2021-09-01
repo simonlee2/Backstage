@@ -43,6 +43,7 @@ export default function Home() {
       }
     } catch (error) {
       alert(error);
+      setTransactionDetail({subscriptions: null, history: null})
     } finally {
       setIsLoading(false);
     }
