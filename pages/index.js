@@ -10,7 +10,6 @@ import {
   Box
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import TransactionDetail from '../components/transactionDetail';
 import Subscriptions from '../components/subscriptions'
 import History from '../components/history'
 
