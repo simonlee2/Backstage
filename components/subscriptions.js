@@ -18,8 +18,10 @@ export default function Subscriptions({ data }) {
   
   return (
     <div>
-      <Heading py="4" size="xl">Subscriptions</Heading>
-      <Wrap justify="center">
+      <Box align="center">
+        <Heading py="4" size="xl">Subscriptions</Heading>
+      </Box>
+      <Wrap w="full" justify="center">
       {
         data.data.map((group) => {
           return (

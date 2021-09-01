@@ -10,7 +10,8 @@ import {
   Badge,
   HStack,
   VStack,
-  Heading
+  Heading,
+  Wrap
 } from '@chakra-ui/react'
 
 export default function History({ data }) {
@@ -34,24 +35,26 @@ export default function History({ data }) {
 
   return (
     <div>
-      <Heading py="4" size="xl">History</Heading>
+      <Box align="center">
+        <Heading py="4" size="xl">History</Heading>
+      </Box>
       <VStack align="center">
         {
           data.signedTransactions.map((transaction) => {
             return (
-              <Box align="start" p="4" w="full" maxWidth={ ["sm","xl"] } borderWidth="1px" borderRadius="lg" key={ transaction.transactionId }>
-                <HStack justify="space-between">
-                  <Badge>{ transaction.type }</Badge>
-                  <Text fontWeight="light" fontSize="sm" color="gray.800">#{ transaction.transactionId }</Text>
+              <Box align="start" p="4" w={ ["sm","md"] } borderWidth="1px" borderRadius="lg" key={ transaction.transactionId } overflow="wrap">
+                <Wrap justify="space-between">
+                  <Badge fontSize={ ["xs", "sm"] }>{ transaction.type }</Badge>
+                  <Text fontWeight="light" fontSize={ ["xs", "sm"] } color="gray.800">#{ transaction.transactionId }</Text>
+                </Wrap>
+                <Text py="2" fontSize={ ["sm", "md"] } fontWeight="medium">{ transaction.productId }</Text>
+                <HStack>
+                  <Text fontSize={ ["xs", "sm"] }>Purchased at:</Text>
+                  <Text fontSize={ ["xs", "sm"] }>{ transaction.purchaseDate }</Text>
                 </HStack>
-                <Text py="2" fontWeight="medium">{ transaction.productId }</Text>
-                <HStack fontSize="sm">
-                  <Text>Purchased at:</Text>
-                  <Text>{ transaction.purchaseDate }</Text>
-                </HStack>
-                <HStack fontSize="sm">
-                  <Text>Expires at:</Text>
-                  <Text>{ transaction.expiresDate }</Text>
+                <HStack>
+                  <Text fontSize={ ["xs", "sm"] }>Expires at:</Text>
+                  <Text fontSize={ ["xs", "sm"] }>{ transaction.expiresDate }</Text>
                 </HStack>
               </Box>
             )

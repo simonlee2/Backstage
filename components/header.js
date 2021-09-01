@@ -28,7 +28,6 @@ export default function Header() {
         shadow="md"
         spacing="6"
         bgColor="white"
-        position="fixed"
         alignItems="center"
         justify="space-between"
       >

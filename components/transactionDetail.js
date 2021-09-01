@@ -1,5 +1,6 @@
 import Subscriptions from './subscriptions'
 import History from './history'
+import { Container } from '@chakra-ui/react'
 
 export default function TransactionDetail({ data }) {
   return renderData(data);
@@ -10,9 +11,9 @@ function renderData(data) {
   const history = data.history
 
   return (
-    <div>
-      <Subscriptions data={ subscriptions }></Subscriptions>  
+    <Container centerContent>
+      {/* <Subscriptions data={ subscriptions }></Subscriptions>   */}
       <History data={ history }></History>
-    </div>
+    </Container>
   )
 }
