@@ -51,7 +51,12 @@ export default function Home() {
 
   return (
     <NextLayout>
-      <Container centerContent>
+      <Container
+        centerContent
+        px="0"
+        py="4"
+        maxW="full"
+      >
         {/* Title  */}
         <Text fontSize={ ["2xl","4xl"] } fontWeight="semibold" py="8">
           In-app Purchase Records
