@@ -25,7 +25,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/transactions/${tid}`, {
+      const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
         headers: {
           'Content-Type': 'application/json'
         },
