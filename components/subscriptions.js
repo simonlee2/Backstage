@@ -54,7 +54,7 @@ export function SubscriptionDetail({ data }) {
     <Box p="4" w={ ["sm","md"] } borderWidth="1px" borderRadius="lg">
       <Grid templateColumns="repeat(4, 1fr)" gap="4">
         <GridItem colSpan="4">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Product ID" value={ lastTransaction.signedTransactionInfo.productId }/>
+          <DefinitionList fontSize={ ["sm", "md"] } maxWidth="full" name="Product ID" value={ lastTransaction.signedTransactionInfo.productId }/>
         </GridItem>
         <GridItem colSpan="2">
           <DefinitionList fontSize={ ["sm", "md"] } name="Status" value={ parseStatus(lastTransaction.status) }/>
@@ -68,14 +68,17 @@ export function SubscriptionDetail({ data }) {
         <GridItem colSpan="2">
           <DefinitionList fontSize={ ["sm", "md"] } name="Expires Date" value={ expiresDate.toLocaleString() }/>
         </GridItem>
+        <GridItem colSpan="2">
+          <DefinitionList fontSize={ ["sm", "md"] } name="Subscription Offer" value={ parseOfferType(lastTransaction.signedRenewalInfo.offerType) } />
+        </GridItem>
         <GridItem colSpan="4">
           <Divider />
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize="xs" name="Original Transaction" value={ lastTransaction.signedTransactionInfo.originalTransactionId } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Transaction ID" value={ lastTransaction.signedTransactionInfo.transactionId } />
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize="xs" name="Transaction ID" value={ lastTransaction.signedTransactionInfo.transactionId } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Original Transaction" value={ lastTransaction.signedTransactionInfo.originalTransactionId } />
         </GridItem>
       </Grid>
     </Box>
@@ -96,6 +99,19 @@ function parseStatus(value) {
       return <Badge colorScheme="red">Revoked</Badge>
     default:
       return null
+  }
+}
+
+function parseOfferType(value) {
+  switch (value) {
+    case 1:
+      return <Badge colorScheme="green">Introductory</Badge>
+    case 2:
+      return <Badge colorScheme="green">Promotion</Badge>
+    case 3:
+      return <Badge colorScheme="green">Code</Badge>
+    default:
+      return <Badge colorScheme="red">None</Badge>
   }
 }
 
