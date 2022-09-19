@@ -119,7 +119,7 @@ export default function Home() {
                 <option>CBID</option>
                 <option>Transaction ID</option>
               </Select>
-              <Input id="query" name="query" type="search" fontSize="sm" required />
+              <Input id="query" name="query" type="search" required />
               <Button w="120px" isLoading={ isLoading } type="submit" colorScheme="green">Search</Button>
             </Flex>
           </form>
