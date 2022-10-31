@@ -3,7 +3,7 @@ import StoreKit from 'storekit-sdk';
 
 export default async (req, res) => {
   const { id, env } = req.query;
-  const key = process.env.APP_STORE_KEY;
+  const { key } = JSON.parse(process.env.APP_STORE_KEY);
   const baseURL = env === 'production' ? 'https://api.storekit.itunes.apple.com/inApps/v1' : 'https://api.storekit-sandbox.itunes.apple.com/inApps/v1'
   const store = new StoreKit({
     baseURL: baseURL,
