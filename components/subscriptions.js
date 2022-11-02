@@ -69,7 +69,7 @@ export function SubscriptionDetail({ data }) {
           <DefinitionList fontSize={ ["sm", "md"] } name="Expires Date" value={ expiresDate.toLocaleString() }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Subscription Offer" value={ parseOfferType(lastTransaction.signedRenewalInfo.offerType) } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Subscription Offer" value={ parseOfferType(lastTransaction.signedTransactionInfo.offerType) } />
         </GridItem>
         <GridItem colSpan="4">
           <Divider />
@@ -103,6 +103,7 @@ function parseStatus(value) {
 }
 
 function parseOfferType(value) {
+  console.log(`OfferType = ${value}`);
   switch (value) {
     case 1:
       return <Badge colorScheme="green">Introductory</Badge>
