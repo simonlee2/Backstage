@@ -47,38 +47,44 @@ export function DefinitionList({ name, value, fontSize }) {
 
 export function SubscriptionDetail({ data }) {
   const lastTransaction = data.lastTransactions[0];
-  const purchaseDate = new Date(lastTransaction.signedTransactionInfo.purchaseDate)
-  const expiresDate = new Date(lastTransaction.signedTransactionInfo.expiresDate);
+  const purchaseDate = new Date(lastTransaction.signedTransactionInfo.purchaseDate).toLocaleString();
+  const expiresDate = new Date(lastTransaction.signedTransactionInfo.expiresDate).toLocaleString();
+  const productId = lastTransaction.signedTransactionInfo.productId;
+  const status = parseStatus(lastTransaction.status);
+  const autoRenewStatus = parseAutoRenewStatus(lastTransaction.signedRenewalInfo.autoRenewStatus);
+  const offerType = parseOfferType(lastTransaction.signedTransactionInfo.offerType);
+  const transactionId = lastTransaction.signedTransactionInfo.transactionId;
+  const originalTransactionId = lastTransaction.signedTransactionInfo.originalTransactionId;
 
   return (
     <Box p="4" w={ ["sm","md"] } borderWidth="1px" borderRadius="lg">
       <Grid templateColumns="repeat(4, 1fr)" gap="4">
         <GridItem colSpan="4">
-          <DefinitionList fontSize={ ["sm", "md"] } maxWidth="full" name="Product ID" value={ lastTransaction.signedTransactionInfo.productId }/>
+          <DefinitionList fontSize={ ["sm", "md"] } maxWidth="full" name="Product ID" value={ productId }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Status" value={ parseStatus(lastTransaction.status) }/>
+          <DefinitionList fontSize={ ["sm", "md"] } name="Status" value={ status }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Auto-renew" value={ parseAutoRenewStatus(lastTransaction.signedRenewalInfo.autoRenewStatus) }/>
+          <DefinitionList fontSize={ ["sm", "md"] } name="Auto-renew" value={ autoRenewStatus }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Purchase Date" value={ purchaseDate.toLocaleString() }/>
+          <DefinitionList fontSize={ ["sm", "md"] } name="Purchase Date" value={ purchaseDate }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Expires Date" value={ expiresDate.toLocaleString() }/>
+          <DefinitionList fontSize={ ["sm", "md"] } name="Expires Date" value={ expiresDate }/>
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Subscription Offer" value={ parseOfferType(lastTransaction.signedTransactionInfo.offerType) } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Subscription Offer" value={ offerType } />
         </GridItem>
         <GridItem colSpan="4">
           <Divider />
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Transaction ID" value={ lastTransaction.signedTransactionInfo.transactionId } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Transaction ID" value={ transactionId } />
         </GridItem>
         <GridItem colSpan="2">
-          <DefinitionList fontSize={ ["sm", "md"] } name="Original Transaction" value={ lastTransaction.signedTransactionInfo.originalTransactionId } />
+          <DefinitionList fontSize={ ["sm", "md"] } name="Original Transaction" value={ originalTransactionId } />
         </GridItem>
       </Grid>
     </Box>
