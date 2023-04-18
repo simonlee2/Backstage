@@ -19,6 +19,8 @@ export default function Header() {
     }
   }
 
+  const isSandbox = storeKitEnv === 'sandbox';
+
   return (
     <VStack shadow="md" spacing="0">
       <HStack
@@ -41,26 +43,42 @@ export default function Header() {
           </a>
         </NextLink>
         <HStack alignItems="center">
-          <Switch size={"md"} colorScheme="orange" onChange={handleToggleEnv}/>
+          { renderToggle(isSandbox, handleToggleEnv) }
           <Text>Use Sandbox</Text>
         </HStack>
       </HStack>
       { 
-        storeKitEnv === 'sandbox' ? renderSandboxNotice() : null
+        renderSandboxNotice(isSandbox)
       }
     </VStack>   
   );
 }
 
-function renderSandboxNotice() {
-  return (
-    <HStack
-      minHeight="4"
-      justify="center"
-      backgroundColor="orange"
-      w="full"
-    >
-      <Text size="xs">Viewing Sandbox Data</Text>
-    </HStack>
-  )
+function renderToggle(enabled, handleToggleEnv) {
+  if (enabled) {
+    return (
+      <Switch size={"md"} colorScheme="orange" onChange={handleToggleEnv} isChecked/>
+    )
+  } else {
+    return (
+      <Switch size={"md"} colorScheme="orange" onChange={handleToggleEnv}/>
+    )
+  }
+}
+
+function renderSandboxNotice(enabled) {
+  if (!enabled) {
+    return null;
+  } else {
+    return (
+      <HStack
+        minHeight="4"
+        justify="center"
+        backgroundColor="orange"
+        w="full"
+      >
+        <Text size="xs">Viewing Sandbox Data</Text>
+      </HStack>
+    )
+  }
 }
