@@ -1,17 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
-import StoreKit from 'storekit-sdk';
+import Store from "../../../utils/store"
 
 export default async (req, res) => {
   const { id, env } = req.query;
-  const { key } = JSON.parse(process.env.APP_STORE_KEY);
-  const baseURL = env === 'production' ? 'https://api.storekit.itunes.apple.com/inApps/v1' : 'https://api.storekit-sandbox.itunes.apple.com/inApps/v1'
-  const store = new StoreKit({
-    baseURL: baseURL,
-    issuer: '69a6de70-ff9b-47e3-e053-5b8c7c11a4d1',
-    bid: 'com.cardinalblue.PicCollage',
-    kid: '6R27A8XG4T',
-    privateKey: key,
-  });
+  const store = Store({ env: env });
 
   try {
     const subscriptions = await store.subscriptions(id);

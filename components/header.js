@@ -4,7 +4,7 @@
   Text,
   Switch,
 } from "@chakra-ui/react";
-import { useLocalStorage } from "../src/useLocalStorage";
+import { useLocalStorage } from "../utils/useLocalStorage";
 import NextLink from 'next/link';
 import { FaIdBadge } from 'react-icons/fa';
 
