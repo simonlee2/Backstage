@@ -14,30 +14,57 @@ import {
   Wrap,
   useBreakpointValue
 } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
-export default function History({ data }) {
+export default function History({ transactionId }) {
   const variant = useBreakpointValue({ base: "list", sm: "list", md: "list", lg: "table"})
+  const [history, setHistory] = useState(null);
 
-  if (data == null) {
-    return null;
+  const fetchTransactions = async (tid) => {
+    const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
+
+    if (res.ok) {
+      const { history } = await res.json();
+      processData(history)
+      setHistory(history);
+    } else {
+      const result = await res.json();
+      const error = new Error(result.errorMessage);
+      throw error;
+    }
   }
 
-  data.signedTransactions.forEach((transaction) => {
-    transaction.purchaseDate = new Date(transaction.purchaseDate).toLocaleDateString();
-    transaction.expiresDate = new Date(transaction.expiresDate).toLocaleDateString();
-  });
+  useEffect(() => {
+    fetchTransactions(transactionId);
+  }, [transactionId]);
+
+  if (transactionId == null) {
+    return null;
+  }
 
   return (
     <div>
       <Box align="center">
         <Heading py="4" size="xl">History</Heading>
       </Box>
-      { variant === "table" ? renderTable(data) : renderList(data) }
+      { variant === "table" ? renderTable(history) : renderList(history) }
     </div>
   );
 }
 
-function renderTable(data) {
+function processData(history) {
+  history.signedTransactions.forEach((transaction) => {
+    transaction.purchaseDate = new Date(transaction.purchaseDate).toLocaleDateString();
+    transaction.expiresDate = new Date(transaction.expiresDate).toLocaleDateString();
+  });
+}
+
+function renderTable(history) {
 
   const columns = [
     {key: "transactionId", displayName: "Transaction ID"}, 
@@ -60,7 +87,7 @@ function renderTable(data) {
         </Tr>
       </Thead>
       <Tbody>
-        {data.signedTransactions.map((transaction) => {
+        { history && history.signedTransactions.map((transaction) => {
           return (
             <Tr key={ transaction.transactionId }>
               {
@@ -77,11 +104,11 @@ function renderTable(data) {
   )
 }
 
-function renderList(data) {
+function renderList(history) {
   return (
     <VStack align="center">
       {
-        data.signedTransactions.map((transaction) => {
+        history && history.signedTransactions.map((transaction) => {
           return (
             <Box align="start" p="4" w={ ["sm","md"] } borderWidth="1px" borderRadius="lg" key={ transaction.transactionId } overflow="wrap">
               <Wrap justify="space-between">

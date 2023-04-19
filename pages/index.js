@@ -15,8 +15,6 @@ export default function Home() {
   const [query, setQuery] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [transactionId, setTransactionId] = useState(null);
-  const [subscriptions, setSubscriptions] = useState(null);
-  const [history, setHistory] = useState(null);
   const router = useRouter();
   
   useEffect(async () => {
@@ -36,12 +34,6 @@ export default function Home() {
       alert(error);
     }
   }, []);
-
-  useEffect(() => {
-    if (transactionId != null) {
-      handleTIDSearch(transactionId);
-    }
-  }, [transactionId]);
 
   const handleSearch = async event => {
     event.preventDefault();
@@ -67,26 +59,6 @@ export default function Home() {
       return query;
     } else {
       throw new Error("Unknown query format");
-    }
-  }
-
-  const handleTIDSearch = async (tid) => {
-    try {
-      const { subscriptions } = await fetchSubscriptions(tid);
-      setSubscriptions(subscriptions);
-    } catch (error) {
-      console.error(error);
-      alert(error);
-      setSubscriptions(null);
-    }
-
-    try {
-      const { history } = await fetchTransactions(tid);
-      setHistory(history);
-    } catch (error) {
-      console.error(error);
-      alert(error);
-      setSubscriptions(null);
     }
   }
 
@@ -125,40 +97,6 @@ export default function Home() {
     return transactionId
   }
 
-  const fetchTransactions = async (tid) => {
-    const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'GET'
-    })
-
-    if (res.ok) {
-      return await res.json();
-    } else {
-      const result = await res.json();
-      const error = new Error(result.errorMessage);
-      throw error;
-    }
-  }
-
-  const fetchSubscriptions = async (tid) => {
-    const res = await fetch(`/api/subscriptions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'GET'
-    })
-
-    if (res.ok) {
-      return await res.json();
-    } else {
-      const result = await res.json();
-      const error = new Error(result.errorMessage);
-      throw error;
-    }
-  }
-
   return (
     <NextLayout>
       <Container
@@ -179,8 +117,7 @@ export default function Home() {
                 id="query"
                 w={ ["md", "md", "lg"]} 
                 name="query" 
-                value={query}
-
+                value={query ?? ''}
                 onChange={e => setQuery(e.target.value)}
                 type="search" 
                 placeholder="Transaction ID or CBID" 
@@ -189,8 +126,8 @@ export default function Home() {
               <Button w="120px" isLoading={ isLoading } type="submit" colorScheme="green">Search</Button>
             </Flex>
           </form>
-        <Subscriptions data={ subscriptions }></Subscriptions>
-        <History data={ history }></History>
+        { transactionId && <Subscriptions transactionId={ transactionId }></Subscriptions>}
+        { transactionId && <History transactionId={ transactionId }></History>}
       </Container>
     </NextLayout>
   )

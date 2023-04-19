@@ -10,9 +10,41 @@ import {
   Divider,
   Heading
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
-export default function Subscriptions({ data }) {
-  if (data == null) {
+export default function Subscriptions({ transactionId }) {
+  const [subscriptions, setSubscriptions] = useState(null);
+
+  const fetchSubscriptions = async (tid) => {
+    try {
+      const res = await fetch(`/api/subscriptions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+
+      if (res.ok) {
+        const { subscriptions } =  await res.json();
+        console.log(subscriptions);
+        setSubscriptions(subscriptions);
+      } else {
+        const result = await res.json();
+        const error = new Error(result.errorMessage);
+        throw error;
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+      setSubscriptions(null);
+    }
+  }
+
+  useEffect(() => {
+    fetchSubscriptions(transactionId);
+  }, [transactionId]);
+
+  if (transactionId == null) {
     return null;
   }
   
@@ -23,7 +55,7 @@ export default function Subscriptions({ data }) {
       </Box>
       <Wrap w="full" justify="center">
       {
-        data.data.map((group) => {
+        subscriptions && subscriptions.data.map((group) => {
           return (
             <WrapItem key={ group.subscriptionGroupIdentifier }>
               <SubscriptionDetail data={ group } />
