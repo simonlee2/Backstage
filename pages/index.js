@@ -22,6 +22,10 @@ export default function Home() {
   useEffect(async () => {
     const urlSearchParams = new URLSearchParams(window.location.search)  
     const query = urlSearchParams.get('query')
+    if (query == null) {
+      return;
+    }
+    
     setQuery(query);
 
     try {
