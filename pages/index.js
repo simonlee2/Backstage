@@ -15,7 +15,8 @@ import History from '../components/history'
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchType, setSearchType] = useState('cbid');
-  const [transactionDetail, setTransactionDetail] = useState({subscriptions: null, history: null});
+  const [subscriptions, setSubscriptions] = useState(null);
+  const [history, setHistory] = useState(null);
 
   const handleSelectSearchType = async event => {
     const type = event.target.value;
@@ -63,17 +64,33 @@ export default function Home() {
       const result = await res.json();
       const transactionID = result.data.purchases.edges[0].node.transaction_id;
 
-      // fetch TID
-      const cbidResult = await searchWithTransactionID(transactionID);
-      setTransactionDetail(cbidResult);
+      handleTIDSearch(transactionID);
     } catch (error) {
       alert(error);
-      setTransactionDetail({subscriptions: null, history: null})
+      setSubscriptions(null);
+      setHistory(null);
     }
   }
 
-  const searchWithTransactionID = async (tid) => {
+  const fetchTransactions = async (tid) => {
     const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.log("Not ok");
+      const result = await res.json();
+      throw Error(result.errorMessage);
+    }
+  }
+
+  const fetchSubscriptions = async (tid) => {
+    const res = await fetch(`/api/subscriptions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -91,11 +108,19 @@ export default function Home() {
 
   const handleTIDSearch = async (tid) => {
     try {
-      const result = await searchWithTransactionID(tid);
-      setTransactionDetail(result);
+      const { subscriptions } = await fetchSubscriptions(tid);
+      setSubscriptions(subscriptions);
     } catch (error) {
       alert(error);
-      setTransactionDetail({subscriptions: null, history: null})
+      setSubscriptions(null);
+    }
+
+    try {
+      const { history } = await fetchTransactions(tid);
+      setHistory(history);
+    } catch (error) {
+      alert(error);
+      setSubscriptions(null);
     }
   }
 
@@ -123,8 +148,8 @@ export default function Home() {
               <Button w="120px" isLoading={ isLoading } type="submit" colorScheme="green">Search</Button>
             </Flex>
           </form>
-        <Subscriptions data={ transactionDetail.subscriptions }></Subscriptions>  
-        <History data={ transactionDetail.history }></History>
+        <Subscriptions data={ subscriptions }></Subscriptions>
+        <History data={ history }></History>
       </Container>
     </NextLayout>
   )

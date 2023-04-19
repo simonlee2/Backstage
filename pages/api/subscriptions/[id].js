@@ -6,10 +6,10 @@ export default async (req, res) => {
   const store = Store({ env: env });
 
   try {
-    const history = await store.history(id);
+    const subscriptions = await store.subscriptions(id);
 
     res.status(200).json({
-      history
+      subscriptions
     });
   } catch (error) {
     if (error.response) {
