@@ -109,7 +109,6 @@ function parseStatus(value) {
 }
 
 function parseOfferType(value) {
-  console.log(`OfferType = ${value}`);
   switch (value) {
     case 1:
       return <Badge colorScheme="green">Introductory</Badge>

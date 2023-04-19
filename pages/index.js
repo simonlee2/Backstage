@@ -14,62 +14,67 @@ import History from '../components/history'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-  const [searchType, setSearchType] = useState('cbid');
+  const [transactionId, setTransactionId] = useState(null);
   const [subscriptions, setSubscriptions] = useState(null);
   const [history, setHistory] = useState(null);
-
-  const handleSelectSearchType = async event => {
-    const type = event.target.value;
-    if (type === "CBID") {
-      console.log('Set search type to cbid');
-      setSearchType('cbid');
-    } else if (type === 'Transaction ID') {
-      console.log('Set search type to tid');
-      setSearchType('tid');
-    } 
-  }
 
   const handleSearch = async event => {
     event.preventDefault();
     setIsLoading(true);
+
     const query = event.target.query.value;
-
-    if (searchType === 'cbid') {
-      console.log("Search for cbid", query);
-      await handleCBIDSearch(query);
-    } else if (searchType === 'tid') {
-      console.log("Search for tid", query);
-      await handleTIDSearch(query);
+    try {
+      if (isCBID(query)) {
+        const tid = await fetchTransactionId(query);
+        await handleTIDSearch(tid);
+      } else if (isTransactionId(query)) {
+        await handleTIDSearch(query);
+      } else {
+        const error = new Error("Unknown query format");
+        console.error(error);
+        alert(error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
     }
-
+    
     setIsLoading(false);
   }
 
-  const handleCBIDSearch = async (cbid) => {
-    // Get Transaction ID using CBID
-    try {
-      const res = await fetch(`/api/pic_purchases/${cbid}?env=${localStorage.getItem('storeKitEnv')}`, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'GET'
-      })
+  const isCBID = (query) => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(query);
+  }
 
-      if (!res.ok) {
-        console.log("Not ok");
-        const result = await res.json();
-        throw Error(result.errorMessage);
-      }
+  const isTransactionId = (query) => {
+    const numberRegex = /^[0-9]+$/;
+    return numberRegex.test(query);
+  }
 
-      const result = await res.json();
-      const transactionID = result.data.purchases.edges[0].node.transaction_id;
+  const fetchTransactionId = async (cbid) => {
+    console.log(`fetchTransactionId(${cbid})`);
+    const res = await fetch(`/api/pic_purchases/${cbid}?env=${localStorage.getItem('storeKitEnv')}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
 
-      handleTIDSearch(transactionID);
-    } catch (error) {
-      alert(error);
-      setSubscriptions(null);
-      setHistory(null);
+    const result = await res.json();
+
+    if (!res.ok) {
+      const error = new Error(result.errorMessage);
+      throw error;
     }
+
+    const purchases = result.data.purchases;
+    if (purchases === null) {
+      throw new Error("No purchases found for this CBID");
+    }
+      
+    const transactionId = purchases.edges[0].node.transaction_id;
+    return transactionId
   }
 
   const fetchTransactions = async (tid) => {
@@ -83,9 +88,9 @@ export default function Home() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.log("Not ok");
       const result = await res.json();
-      throw Error(result.errorMessage);
+      const error = new Error(result.errorMessage);
+      throw error;
     }
   }
 
@@ -100,17 +105,19 @@ export default function Home() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.log("Not ok");
       const result = await res.json();
-      throw Error(result.errorMessage);
+      const error = new Error(result.errorMessage);
+      throw error;
     }
   }
 
   const handleTIDSearch = async (tid) => {
+
     try {
       const { subscriptions } = await fetchSubscriptions(tid);
       setSubscriptions(subscriptions);
     } catch (error) {
+      console.error(error);
       alert(error);
       setSubscriptions(null);
     }
@@ -119,6 +126,7 @@ export default function Home() {
       const { history } = await fetchTransactions(tid);
       setHistory(history);
     } catch (error) {
+      console.error(error);
       alert(error);
       setSubscriptions(null);
     }
@@ -140,11 +148,7 @@ export default function Home() {
           {/* Search with CBID */}
           <form onSubmit={handleSearch}>
             <Flex direction={['column', 'row']} spacing="5px" py="4" align="center">
-              <Select w="280px" onChange={handleSelectSearchType}>
-                <option>CBID</option>
-                <option>Transaction ID</option>
-              </Select>
-              <Input id="query" name="query" type="search" required />
+              <Input id="query" w={ ["md", "md", "lg"]} name="query" type="search" placeholder="Transaction ID or CBID" required />
               <Button w="120px" isLoading={ isLoading } type="submit" colorScheme="green">Search</Button>
             </Flex>
           </form>
