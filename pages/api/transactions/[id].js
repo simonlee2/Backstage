@@ -2,11 +2,11 @@
 import Store from "../../../utils/store"
 
 export default async (req, res) => {
-  const { id, env } = req.query;
+  const { id, env, revision } = req.query;
   const store = Store({ env: env });
 
   try {
-    const history = await store.history(id);
+    const history = await store.paginatedHistory(id, revision);
 
     res.status(200).json({
       history

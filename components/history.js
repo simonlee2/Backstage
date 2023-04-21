@@ -8,6 +8,7 @@ import {
   Tbody,
   Box,
   Badge,
+  Button,
   HStack,
   VStack,
   Heading,
@@ -19,6 +20,7 @@ import { useEffect, useState } from 'react'
 export default function History({ transactionId }) {
   const variant = useBreakpointValue({ base: "list", sm: "list", md: "list", lg: "table"})
   const [history, setHistory] = useState(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const fetchTransactions = async (tid) => {
     const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
@@ -30,13 +32,69 @@ export default function History({ transactionId }) {
 
     if (res.ok) {
       const { history } = await res.json();
+      console.log(history);
       processData(history)
       setHistory(history);
     } else {
       const result = await res.json();
       const error = new Error(result.errorMessage);
+      console.error(error);
+      alert(error);
+    }
+  }
+
+  const fetchMoreTransactions = async (tid) => {
+    const revision = history.revision;
+    const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}&revision=${revision}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
+
+    if (res.ok) {
+      const moreHistory = (await res.json()).history;
+      processData(moreHistory)
+
+      history.signedTransactions = history.signedTransactions.concat(moreHistory.signedTransactions);
+      history.hasMore = moreHistory.hasMore;
+      history.revision = moreHistory.revision;
+      console.log(`loaded more history. Revision: ${history.revision}, hasMore: ${history.hasMore}`);
+    } else {
+      const result = await res.json();
+      const error = new Error(result.errorMessage);
       throw error;
     }
+  }
+
+  const loadMoreHistory = async () => {
+    setIsLoadingMore(true);
+    await fetchMoreTransactions(transactionId);
+    setIsLoadingMore(false);
+  }
+
+  const renderLoadMoreButton = () => {
+    return (
+      <Box align="center" py="4">
+        <Button
+          isLoading={isLoadingMore}
+          loadingText='Loading'
+          colorScheme='teal'
+          variant='outline'
+          spinnerPlacement='end'
+          onClick={ e => loadMoreHistory() }
+        >
+          Load More
+        </Button>
+      </Box>
+    )
+  }
+
+  const canLoadMore = () => {
+    if (history != null) {
+      console.log(`history.hasMore: ${history.hasMore}, history.revision: ${history.revision}`);
+    }
+    return history != null && history.hasMore && history.revision;
   }
 
   useEffect(() => {
@@ -47,12 +105,15 @@ export default function History({ transactionId }) {
     return null;
   }
 
+  console.log(canLoadMore());
+
   return (
     <div>
       <Box align="center">
         <Heading py="4" size="xl">History</Heading>
       </Box>
       { variant === "table" ? renderTable(history) : renderList(history) }
+      { canLoadMore() ? renderLoadMoreButton(isLoadingMore) : null }
     </div>
   );
 }
