@@ -3839,9 +3839,9 @@ static-eval@2.0.2:
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
 storekit-sdk@^1.0.3:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/storekit-sdk/-/storekit-sdk-1.1.4.tgz#e88fbf79de1b2f88d418e8718506eea3c741f13d"
-  integrity sha512-dMooj4g8kabpqZfWXCi43p2Wcw+5gVoRHvNEeaIaEP+xr/eR3SQK9aZIViQmmlahpBDqdxESFyLLLl2csupZYQ==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/storekit-sdk/-/storekit-sdk-1.1.5.tgz#87bcafab1f18e3df9b2936115f84e773a5260eaa"
+  integrity sha512-8myyqT0+j46e48SCMEQEwiegDREo/aEpggbvBAER85sfDOrA2CJBoyny3Y9H05k3CNLPLRJwTDHRU4g1XXbZ9g==
   dependencies:
     axios "^0.21.1"
     jsonpath "^1.1.1"
