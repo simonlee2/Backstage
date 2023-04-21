@@ -4,9 +4,10 @@ import Store from "../../../utils/store"
 export default async (req, res) => {
   const { id, env, revision } = req.query;
   const store = Store({ env: env });
+  const sort = "DESCENDING"
 
   try {
-    const history = await store.paginatedHistory(id, revision);
+    const history = await store.paginatedHistory(id, sort, revision);
 
     res.status(200).json({
       history
