@@ -89,10 +89,10 @@ export default function Home() {
     }
 
     const purchases = result.data.purchases;
-    if (purchases === null) {
+    if (purchases === null || purchases.edges.length === 0) {
       throw new Error("No purchases found for this CBID");
     }
-      
+
     const transactionId = purchases.edges[0].node.transaction_id;
     return transactionId
   }

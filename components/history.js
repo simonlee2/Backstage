@@ -105,8 +105,6 @@ export default function History({ transactionId }) {
     return null;
   }
 
-  console.log(canLoadMore());
-
   return (
     <div>
       <Box align="center">
