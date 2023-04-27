@@ -43,7 +43,7 @@ export default function Header() {
           </a>
         </NextLink>
         <HStack alignItems="center">
-          { renderToggle(isSandbox, handleToggleEnv) }
+          { renderToggle(storeKitEnv === 'sandbox', handleToggleEnv) }
           <Text>Use Sandbox</Text>
         </HStack>
       </HStack>
@@ -55,15 +55,15 @@ export default function Header() {
 }
 
 function renderToggle(enabled, handleToggleEnv) {
-  if (enabled) {
+  console.log(`enabled: ${enabled}`);
     return (
-      <Switch size={"md"} colorScheme="orange" onChange={handleToggleEnv} isChecked/>
+      <Switch
+        size={"md"}
+        colorScheme="orange"
+        onChange={handleToggleEnv}
+        isChecked={enabled}
+      />
     )
-  } else {
-    return (
-      <Switch size={"md"} colorScheme="orange" onChange={handleToggleEnv}/>
-    )
-  }
 }
 
 function renderSandboxNotice(enabled) {

@@ -23,7 +23,10 @@ export default function History({ transactionId }) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const fetchTransactions = async (tid) => {
-    const res = await fetch(`/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`, {
+    const url = `/api/transactions/${tid}?env=${localStorage.getItem('storeKitEnv')}`;
+    console.log(`fetching transactions from ${url}`);
+    console.log(url.includes('"'));
+    const res = await fetch(url, {
       headers: {
         'Content-Type': 'application/json'
       },
